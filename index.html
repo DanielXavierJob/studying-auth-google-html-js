@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Auth Google HTML & JS</title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap"
+      rel="stylesheet"
+    />
+
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+
+    <!-- Style -->
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://unpkg.com/jwt-decode/build/jwt-decode.js"></script>
+    <script>
+
+      // this function responsible to callback signIn google, the response is a jwt token, with has desencrypted with library jwt-decode
+      function handleCredentialResponse(response) {
+        const data = jwt_decode(response.credential);
+        signedEmail.append(data.email);
+        signedName.append(`${data.given_name} ${data.family_name}`);
+        signedAvatar.setAttribute("src", data.picture);
+        signInOauth.style.display = "none";
+        signedOauth.style.display = "block";
+      }
+
+      window.onload = function () {
+        google.accounts.id.initialize({
+          client_id: "YOUR_GOOGLE_CLIENT_ID",
+          callback: handleCredentialResponse,
+        });
+        google.accounts.id.renderButton(
+          document.getElementById("ButtonSignIn"),
+          {
+            size: "large",
+            type: "standard",
+            shape: "pill",
+            theme: "filled_black",
+            text: "continue_with.",
+            logo_alignment: "left",
+          } // customization attributes
+        );
+        // google.accounts.id.prompt(); // also display the One Tap dialog
+      };
+    </script>
+  </head>
+  <body>
+    <div class="content">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6">
+            <img
+              src="images/undraw_remotely_2j6y.svg"
+              alt="Image"
+              class="img-fluid"
+            />
+          </div>
+          <div class="col-md-6 contents">
+            <div class="row justify-content-center align-content-center">
+              <div class="col-md-8" id="signInOauth">
+                <div class="mb-4">
+                  <h4
+                    style="
+                      margin-left: auto;
+                      margin-right: auto;
+                      display: table;
+                    "
+                  >
+                    Sign In with Google OAuth
+                  </h4>
+                  <p class="mb-4"></p>
+                </div>
+                <div
+                  id="ButtonSignIn"
+                  style="margin-left: auto; margin-right: auto; display: table"
+                ></div>
+              </div>
+              <div
+                class="col-md-8 justify-content-center"
+                id="signedOauth"
+                style="display: none"
+              >
+                <div class="card">
+                  <div class="banner">
+                    <img
+                      src=""
+                      alt=""
+                      id="signedAvatar"
+                      style="width: 8rem; border-radius: 5rem"
+                    />
+                  </div>
+                  <div style="margin-top: 1rem">
+                    <h2 class="name" id="signedName"></h2>
+                    <div class="title" id="signedEmail"></div>
+    
+                    <div class="desc">
+                      You account has successfully authenticated :)
+                    </div>
+
+                    
+                  </div>
+                  <div class="actions">
+                    <div class="logout-btn">
+                      <button onClick="window.location.reload()">Logout</button>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>
